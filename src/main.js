@@ -14,8 +14,8 @@ checkPages()
 /**
  * Setup Loco And Gsap
  */
-
-// const runbg = new bgFunction()
+ gsap.registerPlugin(ScrollTrigger)
+ 
 let locoScroll
 if (window.innerWidth > 480) 
 {
