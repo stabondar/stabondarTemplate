@@ -16,6 +16,21 @@
       "import",
       "sort-imports-es6-autofix"
     ],
+    "import/order": [
+        "error",
+        {
+          "groups": [
+            "index",
+            "sibling",
+            "parent",
+            "internal",
+            "external",
+            "builtin",
+            "object",
+            "type"
+          ]
+        }
+      ],
     "rules": {
       "@typescript-eslint/explicit-module-boundary-types": "off",
       "import/order": [
