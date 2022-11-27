@@ -1,4 +1,4 @@
-import './styles/loco.css'
+import '../styles/loco.css'
 
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
