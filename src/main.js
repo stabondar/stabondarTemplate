@@ -1,11 +1,5 @@
-import './styles/style.css'
+import './styles/style.scss'
 
-import bg from './moduls/Bg.js'
-import LocoGsap from './moduls/LocoGsap'
+import App from './App'
 
-const checkPages = () => 
-{
-    const background = new bg()
-    const scroll = new LocoGsap()
-}
-checkPages()
+const app = new App()

@@ -1,3 +1,5 @@
+@import './test.scss';
+
 main
 {
   visibility: hidden;
@@ -6,16 +8,6 @@ main
 .loader
 {
   display: block;
-}
-
-.burger__item.w--current
-{
-  pointer-events: none;
-}
-
-.burger__item.w--current .h3--84
-{
-  color: #7870F1;
 }
 
 ::selection
