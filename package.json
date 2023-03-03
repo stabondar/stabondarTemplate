@@ -20,6 +20,7 @@
     "eslint-plugin-sort-imports-es6-autofix": "^0.6.0",
     "jquery": "^3.6.0",
     "rimraf": "^3.0.2",
+    "sass": "^1.58.3",
     "vite": "^2.7.2",
     "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-glsl": "^0.4.0"
@@ -28,6 +29,7 @@
     "@finsweet/ts-utils": "^0.38.0",
     "@studio-freight/lenis": "^0.2.28",
     "gsap": "file:gsap-bonus.tgz",
+    "jquery-validation": "^1.19.5",
     "vercel": "^28.2.5"
   }
 }
