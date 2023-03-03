@@ -1,0 +1,16 @@
+@import './styles/_root.scss';
+@import './styles/home.scss';
+@import './styles/components/validate.scss';
+
+
+// Paste it to webflow head and remove
+main { visibility: hidden; }
+.loader { display: block; }
+
+::selection
+{
+  background-color: $black;
+  color: var(--white);
+  -webkit-text-fill-color: var(--white);
+  -webkit-text-stroke-color: transparent;
+}

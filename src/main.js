@@ -1,4 +1,4 @@
-import './styles/style.scss'
+import './style.scss'
 
 import App from './App'
 
