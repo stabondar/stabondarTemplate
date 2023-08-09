@@ -1,6 +1,8 @@
 import barba from '@barba/core'
 import barbaPrefetch from '@barba/prefetch'
 
+import Scroll from './moduls/Scroll.js'
+
 let instance = null
 
 export default class App {
@@ -9,24 +11,14 @@ export default class App {
         if(instance) return instance
         instance = this
 
-        const scrollTop = () => window.scrollTo({top: 0, behavior: 'instant'})
-
-        window.addEventListener('load', () => { setTimeout(scrollTop, 1) })
+        this.scroll = new Scroll()
+        let lenis = this.scroll.lenis
 
         this.utils = null
-        this.scroll = null
 
         const checkPages = async () =>
         {   
             this.utils = await import('./moduls/Utils.js').then(module => new module.default)
-
-            if(this.scroll == null)
-            {
-                this.scroll = await import('./moduls/Scroll.js')
-                new this.scroll.default()
-            }
-
-            scrollTop()
 
             // if(main.attr('data-barba-namespace') == 'home')
             // {
@@ -88,6 +80,11 @@ export default class App {
                     // }
                 }
             ]
+        })
+
+        barba.hooks.once((data) =>
+        {
+            lenis.scrollTo(0, {offset: 0})
         })
         
         barba.hooks.after(async (data) =>
