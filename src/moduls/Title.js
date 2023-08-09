@@ -1,6 +1,7 @@
 import gsap from 'gsap'
 import {ScrollTrigger} from 'gsap/ScrollTrigger'
 import {SplitText} from 'gsap/SplitText'
+import FontFaceObserver from 'fontfaceobserver';
 
 import SplitTextResize from './Components/SplitTextResize'
 
@@ -16,7 +17,7 @@ export default class Title
         let enter = 'top 80%'
         let splitLine, splitWord
 
-        this.lineAnimation = function()
+        const lineAnimation = () =>
         {
             let item = $('[text-line]')
             splitLine = new SplitText(item, {type: 'lines, chars'})
@@ -45,12 +46,11 @@ export default class Title
             })
         }
         
-        window.addEventListener('load', () => 
+        let titleFont = new FontFaceObserver('FontNAme')
+        titleFont.load().then(function () 
         {
-            this.lineAnimation()
-            const lineAnimationResize = new SplitTextResize(splitLine, this.lineAnimation)
+            lineAnimation()
+            const lineAnimationResize = new SplitTextResize(splitLine, lineAnimation)
         })
-
-
     }
 }

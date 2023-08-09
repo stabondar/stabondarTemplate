@@ -4,6 +4,7 @@ import { defineConfig } from 'vite';
 
 // vite.config.js
 export default defineConfig({
+  base: 'https://domain.com/',
   plugins: [
     eslintPlugin(), 
     glsl()],
@@ -21,13 +22,21 @@ export default defineConfig({
     rollupOptions: {
       input: './src/main.js',
       output: {
-        format: 'umd',
+        format: 'esm',
+        generatedCode: {
+          preset: 'es5',
+          arrowFunctions: false
+        },
         entryFileNames: 'main.js',
-        esModule: false,
+        chunkFileNames: 'main-[name].js',
+        assetFileNames: 'main-style.[ext]',
+        esModule: true,
         compact: true,
         globals: {
           jquery: '$',
         },
+        dynamicImportVars: true,
+        makeAbsoluteExternalsRelative: true,
       },
       external: ['jquery'],
     },

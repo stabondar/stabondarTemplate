@@ -15,7 +15,6 @@ export default class SplitTextResize
             {
                 split.revert()
                 initThis()
-                console.log(initThis);
             }
             windowWidth = window.innerWidth
         }

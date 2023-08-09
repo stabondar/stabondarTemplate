@@ -1,6 +1,6 @@
 {
   "name": "stabondar-template",
-  "version": "0.1.0",
+  "version": "2.1.0",
   "author": "stabondar>",
   "license": "MIT",
   "type": "module",
@@ -26,8 +26,11 @@
     "vite-plugin-glsl": "^0.4.0"
   },
   "dependencies": {
+    "@barba/core": "^2.9.7",
+    "@barba/prefetch": "^2.1.10",
     "@finsweet/ts-utils": "^0.38.0",
     "@studio-freight/lenis": "^0.2.28",
+    "fontfaceobserver": "^2.3.0",
     "gsap": "file:gsap-bonus.tgz",
     "jquery-validation": "^1.19.5",
     "vercel": "^28.2.5"
