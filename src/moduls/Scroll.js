@@ -1,9 +1,13 @@
 import Lenis from '@studio-freight/lenis'
 
+let instance = null
 export default class Scroll 
 {
     constructor()
     {
+        if(instance) return instance
+        instance = this
+
         this.lenis = new Lenis(
         {
             duration: 0.8,
@@ -16,10 +20,10 @@ export default class Scroll
         })
 
         
-        let lenis = this.lenis
+        let self = this
         function raf(time) 
         {
-            lenis.raf(time)
+            self.lenis.raf(time)
             requestAnimationFrame(raf)
         }
         
