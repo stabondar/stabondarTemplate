@@ -8,7 +8,7 @@ export default class DividerAnimation
     constructor(elem)
     {
         let tl = gsap.timeline({paused: true, defaults: {duration: 1, ease: 'power3'}})
-        
+
         tl.from(elem, {transformOrigin: 'left', scaleX: 0})
 
         ScrollTrigger.create(

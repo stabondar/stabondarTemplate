@@ -1,4 +1,4 @@
-export default class Page
+export default class home
 {
     constructor()
     {

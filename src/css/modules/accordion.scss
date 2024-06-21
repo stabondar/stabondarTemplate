@@ -1,0 +1,29 @@
+.accordion
+{
+    &.active
+    {
+        .accordion_content
+        {
+            grid-template-rows: 1fr;
+        }
+
+        .accordion_icon
+        {
+            transform: rotate(45deg);
+            // color: var(--color--main);
+        }
+    }
+}
+
+.accordion_content
+{
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--ease);
+}
+
+.accordion_icon
+{
+    transition: transform var(--ease), color var(--ease);
+}
+  

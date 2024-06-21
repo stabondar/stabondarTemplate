@@ -1,0 +1,20 @@
+.nav
+{
+    .logo
+    {
+        transition: width var(--ease);
+        width: max(12.5rem, 10.42vw);
+    }
+}
+
+.at-top,
+.at-bottom
+{
+    .nav
+    {
+        .logo
+        {
+            width: max(33.75rem, 28.125vw);
+        }
+    }
+}

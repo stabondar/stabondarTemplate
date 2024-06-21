@@ -1,0 +1,58 @@
+.burger
+{
+    display: flex;
+    visibility: hidden;
+    pointer-events: none;
+    transition: visibility 0s linear 0.8s;
+}
+
+.burger_overlay
+{
+    opacity: 0;
+    transition: opacity var(--ease);
+}
+
+.nav_burger-line
+{
+    --y: 0;
+    --scale: 1;
+
+    transition: transform var(--ease);
+    transform: translateY(var(--y)) scaleX(var(--scale));
+}
+
+.nav_burger
+{
+    &:hover
+    {
+        .nav_burger-line
+        {
+            --scale: 0.8;
+        }
+    }
+}
+
+.burger-open
+{
+    .burger
+    {
+        visibility: visible;
+        pointer-events: auto;
+        transition: visibility 0s linear 0s;
+    }
+
+    .nav_burger-line
+    {
+        --y: calc(1.88rem / 2 + 1px);
+
+        &:nth-child(2)
+        {
+            --y: calc(-1.88rem / 2 - 1px);
+        }
+    }
+
+    .burger_overlay
+    {
+        opacity: 1;
+    }
+}

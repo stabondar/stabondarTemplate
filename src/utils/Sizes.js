@@ -1,20 +1,26 @@
-import gsap from 'gsap'
-import {SplitText} from 'gsap/SplitText'
+import EventEmitter from "./EventEmitter"
 
-gsap.registerPlugin(SplitText)
-
-export default class SplitTextResize
+export default class Sizes extends EventEmitter
 {
-    constructor(split, initThis)
+    constructor()
     {
+        super()
+
+        this.width = window.innerWidth
+        this.height = window.innerHeight
+        this.pixelRatio = Math.min(window.devicePixelRatio, 2)
+
         let windowWidth = window.innerWidth
         const checkWidth = () => 
         {
             let afterWidth = window.innerWidth
             if (windowWidth !== afterWidth)
             {
-                split.revert()
-                initThis()
+                this.width = window.innerWidth
+                this.height = window.innerHeight
+                this.pixelRatio = Math.min(window.devicePixelRatio, 2)            
+
+                this.trigger('resize')
             }
             windowWidth = window.innerWidth
         }

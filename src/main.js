@@ -1,5 +1,3 @@
-import './style.scss'
+import App from "./App"
 
-import App from './App'
-
-const app = new App()
+const instance = new App()

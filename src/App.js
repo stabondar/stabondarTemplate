@@ -1,108 +1,115 @@
+import './css/style.scss'
 import barba from '@barba/core'
-import barbaPrefetch from '@barba/prefetch'
-
-import Scroll from './moduls/Scroll.js'
+import ModuleLoader from './ModuleLoader.js'
+import EventEmitter from './utils/EventEmitter.js'
 
 let instance = null
 
-export default class App {
+export default class app extends EventEmitter
+{
     constructor()
     {
         if(instance) return instance
+
+        super()
         instance = this
+        this.app = null
 
-        this.scroll = new Scroll()
-        let lenis = this.scroll.lenis
+        history.scrollRestoration = 'manual'
 
-        this.utils = null
-
-        const checkPages = async () =>
-        {   
-            this.utils = await import('./moduls/Utils.js').then(module => new module.default)
-
-            // if(main.attr('data-barba-namespace') == 'home')
-            // {
-            //     this.home = await import('./moduls/Pages/Home/Home.js').then(module => new module.default)
-            // }
-        }
-
-        barba.use(barbaPrefetch)
-
+        this.init()
+    }
+    
+    init()
+    {
         barba.init(
         {
-            debug: true,
+            schema: 
+            {
+                prefix: 'data-transition',
+                namespace: 'page'
+            },
+            debug: false,
             timeout: 7000,
-            transitions: 
+            prevent: ({ el }) => (el.classList && el.classList.contains('prevent')) || el.closest('.prevent'),
+            transitions:
             [
-                // Once Opening
                 {
                     name: 'once',
-                    async once (data)
-                    {
-                        // const forms = new Forms()
-                        // const pageAnimation = async () =>
-                        // {
-                        //     if(data.next.namespace == 'home')
-                        //     {
-                        //         let animation = await import('./moduls/Transitions/HomeLoader.js').then(module => new module.default)
-                        //     }
-                        //     if(data.next.namespace == 'values')
-                        //     {
-                        //         let animation = await import('./moduls/Transitions/ValuesLoader.js').then(module => new module.default)
-                        //     }
-                        // }
-
-                        // let globalLoader = null
-                        // if(globalLoader == null)
-                        // {
-                        //     globalLoader = await import('./moduls/Transitions/GlobalLoader.js').then(module => new module.default(checkPages, pageAnimation))
-                        // }
-                    }
+                    once: ({next}) => this.onceLoad(next),
                 },
-                {
-                    // name: 'transition',
-                    // async leave(data)
-                    // {
-                    //     const done = this.async()
-                    //     instance.leave = await import('./moduls/Transitions/Leave.js').then(module => new module.default(data.current.container, done))
-                    // },
-                    // async enter(data)
-                    // {
-                    //     const pageAnimation = async () =>
-                    //     {
-                    //         if(data.next.namespace == 'home')
-                    //         {
-                    //             let animation = await import('./moduls/Transitions/HomeLoader.js').then(module => new module.default)
-                    //         }
-                    //     }
-
-                    //     instance.enter = await import('./moduls/Transitions/Enter.js').then(module => new module.default(data.next.container, pageAnimation))
-                    // }
+                {   
+                    name: 'transition',
+                    async leave(data)
+                    {
+                        const done = this.async()
+                        instance.leave = await import('./transitions/Leave.js').then(module => new module.default(done))
+                    },
+                    async enter(data)
+                    {
+                        instance.enter = await import('./transitions/Enter.js').then(module => new module.default(data.next.container))
+                    },
+                },
+                {   
+                    name: 'self',
+                    async leave(data)
+                    {
+                        const done = this.async()
+                        instance.leave = await import('./transitions/Leave.js').then(module => new module.default(done))
+                    },
+                    async enter(data)
+                    {
+                        instance.enter = await import('./transitions/Enter.js').then(module => new module.default(data.next.container))
+                    },
                 }
             ]
         })
 
-        barba.hooks.once((data) =>
-        {
-            lenis.scrollTo(0, {offset: 0})
-        })
+        // barba.hooks.enter( (data) =>
+        // {
+        //     let videos = data.next.container.querySelectorAll('video')
+        //     videos.forEach(function(video) { video.load() })
+        // })
+
+        // barba.hooks.after( async (data) =>
+        // {
+        //     await restartWebflow()
+        // })
+    }
+
+    async loadMainComponentsOnce() 
+    {
+        this.app = new app()
         
-        barba.hooks.after(async (data) =>
-        {
-            const restart = await import('@finsweet/ts-utils')
-            restart.restartWebflow()
+        const [Scroll, Sizes, GSAP, Time, Burger] = await Promise.all(
+        [
+            import('./utils/Scroll.js'),
+            import('./utils/Sizes.js'),
+            import('./utils/GSAP.js'),
+            import('./utils/Tick.js'),
+            import('./utils/Burger.js'),
+        ])
+       
+        this.app.scroll = new Scroll.default()
+        this.app.sizes = new Sizes.default()
+        this.gsap = new GSAP.default()
+        this.burger = new Burger.default(this.app)
+        this.app.tick = new Time.default()
+        
 
-            checkPages()
-        })
+        this.app.moduleLoader.init()
+        this.app.sizes.on('resize', () => this.app.trigger('resize'))
+        this.app.tick.on('tick', () => this.app.trigger('tick'))
+    }
 
-        barba.hooks.enter( (data) =>
-        {
-            let videos = data.next.container.querySelectorAll('video')
+    async pageScrollTop() { window.scrollTo({top: 0, behavior: 'instant'}) }
 
-            videos.forEach(function(video) 
-            {
-                video.load()
-            })
-        })
+    async onceLoad(next)
+    {   
+        this.moduleLoader = new ModuleLoader(this)
+        this.once = await import('./PageLoader.js').then(module => new module.default(next, this.loadMainComponentsOnce, this))
+        await this.pageScrollTop()
     }
 }
+
+const appInstance = new app()
