@@ -21,7 +21,7 @@ export default class ModuleLoader
                 const values = moduleName.split(' ')
                 for(const value of values)
                 {
-                    const module = await import(`./modules/${value}.js`)
+                    const module = await import(`@modules/${value}.js`)
                         .then(module => new module.default(element, this.app))
                 }
             })
