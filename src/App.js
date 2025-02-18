@@ -1,7 +1,10 @@
 import './css/style.scss'
 import barba from '@barba/core'
-import ModuleLoader from './ModuleLoader.js'
-import EventEmitter from './utils/EventEmitter.js'
+import barbaPrefetch from '@barba/prefetch'
+import EventEmitter from '@utils/EventEmitter.js'
+import { RestartWebflow } from '@utils/RestartWebflow.js'
+import { defaultTransition } from '@transitions/schema/defaultTransition.js'
+import { CheckPages } from '@transitions/CheckPages.js'
 
 let instance = null
 
@@ -12,6 +15,7 @@ export default class app extends EventEmitter
         if(instance) return instance
 
         super()
+
         instance = this
         this.app = null
 
@@ -19,96 +23,92 @@ export default class app extends EventEmitter
 
         this.init()
     }
-    
+
     init()
     {
-    //     barba.init(
-    //     {
-    //         schema: 
-    //         {
-    //             prefix: 'data-transition',
-    //             namespace: 'page'
-    //         },
-    //         debug: false,
-    //         timeout: 7000,
-    //         prevent: ({ el }) => (el.classList && el.classList.contains('prevent')) || el.closest('.prevent'),
-    //         transitions:
-    //         [
-    //             {
-    //                 name: 'once',
-    //                 once: ({next}) => this.onceLoad(next),
-    //             },
-    //             {   
-    //                 name: 'transition',
-    //                 async leave(data)
-    //                 {
-    //                     const done = this.async()
-    //                     instance.leave = await import('./transitions/Leave.js').then(module => new module.default(done))
-    //                 },
-    //                 async enter(data)
-    //                 {
-    //                     instance.enter = await import('./transitions/Enter.js').then(module => new module.default(data.next.container))
-    //                 },
-    //             },
-    //             {   
-    //                 name: 'self',
-    //                 async leave(data)
-    //                 {
-    //                     const done = this.async()
-    //                     instance.leave = await import('./transitions/Leave.js').then(module => new module.default(done))
-    //                 },
-    //                 async enter(data)
-    //                 {
-    //                     instance.enter = await import('./transitions/Enter.js').then(module => new module.default(data.next.container))
-    //                 },
-    //             }
-    //         ]
-    //     })
+        barba.use(barbaPrefetch)
 
-    //     // barba.hooks.enter( (data) =>
-    //     // {
-    //     //     let videos = data.next.container.querySelectorAll('video')
-    //     //     videos.forEach(function(video) { video.load() })
-    //     // })
+        barba.init(
+        {
+            schema:
+            {
+                prefix: 'data-transition',
+                namespace: 'page'
+            },
+            debug: true,
+            timeout: 7000,
+            prevent: ({ el, event }) =>
+            {
+                if(event.type == 'click')
+                {
+                    event.preventDefault()
+                    event.stopPropagation()
 
-    //     // barba.hooks.after( async (data) =>
-    //     // {
-    //     //     await restartWebflow()
-    //     // })
+                    if(el.classList.contains('go')) window.location = el.href
+
+                    if(el.classList.contains('prevent')) return true
+                    if(el.href.includes('#')) return true
+                }
+            },
+            transitions:
+            [
+                {
+                    name: 'once',
+                    once: ({next}) => this.onceLoad(next),
+                },
+                defaultTransition('transition', this, CheckPages),
+                defaultTransition('self', this, CheckPages)
+            ]
+        })
+
+        barba.hooks.enter( (data) =>
+        {
+            // let videos = data.next.container.querySelectorAll('video')
+            // videos.forEach(function(video) { video.load() })
+        })
+
+        barba.hooks.after( async (data) =>
+        {
+            await RestartWebflow()
+        })
     }
 
-    async loadMainComponentsOnce() 
+    async loadMainComponentsOnce(main)
     {
         this.app = new app()
-        
-        const [Scroll, Sizes, GSAP, Time, Burger] = await Promise.all(
+
+        const
         [
-            import('./utils/Scroll.js'),
-            import('./utils/Sizes.js'),
-            import('./utils/GSAP.js'),
-            import('./utils/Tick.js'),
-            import('./utils/Burger.js'),
+            Scroll,
+            Sizes,
+            GSAP,
+            Time,
+            ModuleLoader
+        ] = await Promise.all(
+        [
+            import('@utils/Scroll.js'),
+            import('@utils/Sizes.js'),
+            import('@utils/GSAP.js'),
+            import('@utils/Tick.js'),
+            import('@utils/ModuleLoader.js')
         ])
-       
+
         this.app.scroll = new Scroll.default()
         this.app.sizes = new Sizes.default()
         this.gsap = new GSAP.default()
-        this.burger = new Burger.default(this.app)
         this.app.tick = new Time.default()
-        
+        this.app.moduleLoader = new ModuleLoader.default(this.app)
 
-        this.app.moduleLoader.init()
+        await CheckPages(this.app, main)
+        await this.app.moduleLoader.loadModules(main)
+
         this.app.sizes.on('resize', () => this.app.trigger('resize'))
         this.app.tick.on('tick', () => this.app.trigger('tick'))
     }
 
-    async pageScrollTop() { window.scrollTo({top: 0, behavior: 'instant'}) }
-
     async onceLoad(next)
-    {   
-        this.moduleLoader = new ModuleLoader(this)
-        this.once = await import('./PageLoader.js').then(module => new module.default(next, this.loadMainComponentsOnce, this))
-        await this.pageScrollTop()
+    {
+        this.once = await import('@transitions/GlobalLoader.js').then(module => new module.default(next, this.loadMainComponentsOnce, this))
     }
 }
 

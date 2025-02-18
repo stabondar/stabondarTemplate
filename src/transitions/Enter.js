@@ -1,42 +1,34 @@
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
-import App from '../app'
-import ModuleLoader from '../ModuleLoader'
-
 gsap.registerPlugin(ScrollTrigger)
 
 export default class Enter
 {
-    constructor(container)
+    constructor(data, checkPages, app)
     {
-        this.app = new App()
-        this.scroll = this.app.scroll.lenis
+        this.app = app
+        this.container = data.next.container
+        this.checkPages = checkPages
 
-        gsap.set(container, {autoAlpha: 1})
+        this.app.scroll.init()
 
-        this.loader = document.querySelector('.loader')
+        this.tl = gsap.timeline({defaults: {duration: 0.8 , ease: 'power2.inOut'}, onStart: () => this.start()})
 
-        this.tl = gsap.timeline({defaults: {duration: 0.8 , ease: 'power2.inOut'}, onStart: () => this.update()})
-
-        this.tl.to(this.loader, {opacity: 0, onComplete: () => this.complete()})
+        this.tl.fromTo(this.container, {autoAlpha: 0}, {autoAlpha: 1, onComplete: () => this.complete()})
 
     }
 
     complete()
     {
-        this.loader.classList.add('hidden')
+        // this.loader.classList.add('hidden')
     }
 
-    update()
+    start()
     {
-        const moduleLoader = new ModuleLoader(this.app, this.app.logger)
-        moduleLoader.loadModules()
-        moduleLoader.loadPageScripts()
+        this.app.moduleLoader.loadModules(this.container)
+        this.checkPages(this.app, this.container)
 
         ScrollTrigger.refresh()
-        this.scroll.start()
-        this.scroll.scrollTo(0, {offset: 0, duration: 0.1, immediate: true })
-        this.scroll.resize()
     }
 }

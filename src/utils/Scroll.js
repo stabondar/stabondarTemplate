@@ -1,12 +1,28 @@
 import Lenis from 'lenis'
+import Tempus from 'tempus'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import 'lenis/dist/lenis.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
-export default class Scroll 
+export default class Scroll
 {
     constructor()
+    {
+        this.init()
+
+        ScrollTrigger.addEventListener('refresh', () => this.lenis.resize())
+
+        this.lenis.on('scroll', ScrollTrigger.update)
+
+        Tempus.add((time) => this.lenis.raf(time))
+
+        gsap.ticker.remove(gsap.updateRoot)
+        Tempus.add((time) => gsap.updateRoot(time / 1000))
+    }
+
+    init()
     {
         this.lenis = new Lenis(
         {
@@ -15,20 +31,14 @@ export default class Scroll
             direction: 'vertical', // vertical, horizontal
             gestureDirection: 'vertical', // vertical, horizontal, both
             smoothWheel: true,
-            smoothTouch: false,
+            syncTouch: false,
+            syncTouchLerp: 0.08,
             wheelMultiplier: 1.6,
-            smoothTouch: false,
         })
+    }
 
-        ScrollTrigger.addEventListener('refresh', () => this.lenis.resize())
-
-        this.lenis.on('scroll', ScrollTrigger.update)
-
-        gsap.ticker.add((time)=>
-        {
-            this.lenis.raf(time * 1000)
-        })
-
-        gsap.ticker.lagSmoothing(0)
+    destroy()
+    {
+        this.lenis.destroy()
     }
 }

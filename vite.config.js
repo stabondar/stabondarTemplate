@@ -1,10 +1,26 @@
 import path from 'path'
+import glsl from 'vite-plugin-glsl'
 import { defineConfig } from 'vite'
+import mkcert from 'vite-plugin-mkcert'
 
 // vite.config.js
 export default defineConfig(
 {
     base: 'https://domain.vercel.app/',
+    resolve:
+    {
+        alias:
+        {
+            '@src': path.resolve(__dirname, 'src'),
+            '@comp': path.resolve(__dirname, 'src/components'),
+            '@modules': path.resolve(__dirname, 'src/modules'),
+            '@gl': path.resolve(__dirname, 'src/gl'),
+            '@pages': path.resolve(__dirname, 'src/pages'),
+            '@utils': path.resolve(__dirname, 'src/utils'),
+            '@styles': path.resolve(__dirname, 'src/css'),
+            '@transitions': path.resolve(__dirname, 'src/transitions'),
+        }
+    },
     build:
     {
         minify: true,
@@ -26,11 +42,25 @@ export default defineConfig(
             }
         }
     },
+    plugins:
+    [
+        glsl(),
+        mkcert(
+        {
+
+        })
+    ],
     server:
     {
         port: 4321, // server port
         // open: true, // open in browser automatically
         hot: true, // enable hot module replacement
+        cors:
+        {
+            origin: '*', // Allow all origins
+            methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+            allowedHeaders: ['Content-Type', 'Authorization']
+        },
     },
     preview:
     {

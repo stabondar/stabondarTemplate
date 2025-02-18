@@ -1,3 +1,3 @@
-import App from "./App"
+import app from "./app"
 
-const instance = new App()
+const instance = new app()

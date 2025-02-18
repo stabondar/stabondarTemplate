@@ -1,6 +1,7 @@
-import EventEmitter from "./EventEmitter";
+import Tempus from 'tempus'
+import EventEmitter from '@utils/EventEmitter'
 
-export default class Tick extends EventEmitter
+export default class Time extends EventEmitter
 {
     constructor()
     {
@@ -11,7 +12,7 @@ export default class Tick extends EventEmitter
         this.elapsed = 0
         this.delta = 16
 
-        window.requestAnimationFrame(() => { this.tick() })
+        Tempus.add(() => this.tick())
     }
 
     tick()
@@ -22,7 +23,5 @@ export default class Tick extends EventEmitter
         this.elapsed = this.current - this.start
 
         this.trigger('tick')
-
-        window.requestAnimationFrame(() => { this.tick() })
     }
 }

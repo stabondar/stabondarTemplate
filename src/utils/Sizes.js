@@ -1,4 +1,4 @@
-import EventEmitter from "./EventEmitter"
+import EventEmitter from '@utils/EventEmitter'
 
 export default class Sizes extends EventEmitter
 {
@@ -6,34 +6,58 @@ export default class Sizes extends EventEmitter
     {
         super()
 
-        this.width = window.innerWidth
-        this.height = window.innerHeight
+        this.body = document.querySelector('body')
+        this.canvasContainer = document.querySelector('.canvas-container')
+        this.width = this.canvasContainer ? this.canvasContainer.offsetWidth : window.innerWidth
+        this.height = this.canvasContainer ? this.canvasContainer.offsetHeight : window.innerHeight
         this.pixelRatio = Math.min(window.devicePixelRatio, 2)
+        this.aspect = this.width / this.height
+        this.aspectV = this.height / this.width
 
-        let windowWidth = window.innerWidth
-        const checkWidth = () => 
+        let windowWidth = this.canvasContainer ? this.canvasContainer.offsetWidth : window.innerWidth
+        let windowHeight = this.canvasContainer ? this.canvasContainer.offsetHeight : window.innerHeight
+        let initWidth = windowWidth
+        const checkWidth = () =>
         {
-            let afterWidth = window.innerWidth
-            if (windowWidth !== afterWidth)
+            let afterWidth = this.canvasContainer.offsetWidth
+            let afterHeight = this.canvasContainer.offsetHeight
+            if (windowWidth !== afterWidth || (initWidth >= 991 && windowHeight !== afterHeight))
             {
-                this.width = window.innerWidth
-                this.height = window.innerHeight
-                this.pixelRatio = Math.min(window.devicePixelRatio, 2)            
+                this.width = this.canvasContainer ? this.canvasContainer.offsetWidth : window.innerWidth
+                this.height = this.canvasContainer ? this.canvasContainer.offsetHeight : window.innerHeight
+                this.pixelRatio = Math.min(window.devicePixelRatio, 2)
+                this.aspect = this.width / this.height
+                this.aspectV = this.height / this.width
 
                 this.trigger('resize')
             }
-            windowWidth = window.innerWidth
+            windowWidth = this.canvasContainer.offsetWidth
         }
 
-        function debounce(func) {
+        function debounce(func)
+        {
             let timer
-            return function (event) 
+            return function (event)
             {
-                if (timer) clearTimeout(timer);
-                timer = setTimeout(func, 300, event);
+                if (timer) clearTimeout(timer)
+                timer = setTimeout(func, 300, event)
             }
         }
 
         window.addEventListener("resize", debounce(function (e) {checkWidth()}))
+
+        // this.resizeObserver = new ResizeObserver((entries) => this.observerResize(entries))
+        // this.resizeObserver.observe(this.body)
+    }
+
+    observerResize(entries)
+    {
+        for (const entry of entries)
+            {
+            if (entry.target === this.body)
+            {
+                this.trigger("resize")
+            }
+        }
     }
 }
