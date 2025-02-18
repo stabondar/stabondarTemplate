@@ -22,59 +22,59 @@ export default class app extends EventEmitter
     
     init()
     {
-        barba.init(
-        {
-            schema: 
-            {
-                prefix: 'data-transition',
-                namespace: 'page'
-            },
-            debug: false,
-            timeout: 7000,
-            prevent: ({ el }) => (el.classList && el.classList.contains('prevent')) || el.closest('.prevent'),
-            transitions:
-            [
-                {
-                    name: 'once',
-                    once: ({next}) => this.onceLoad(next),
-                },
-                {   
-                    name: 'transition',
-                    async leave(data)
-                    {
-                        const done = this.async()
-                        instance.leave = await import('./transitions/Leave.js').then(module => new module.default(done))
-                    },
-                    async enter(data)
-                    {
-                        instance.enter = await import('./transitions/Enter.js').then(module => new module.default(data.next.container))
-                    },
-                },
-                {   
-                    name: 'self',
-                    async leave(data)
-                    {
-                        const done = this.async()
-                        instance.leave = await import('./transitions/Leave.js').then(module => new module.default(done))
-                    },
-                    async enter(data)
-                    {
-                        instance.enter = await import('./transitions/Enter.js').then(module => new module.default(data.next.container))
-                    },
-                }
-            ]
-        })
+    //     barba.init(
+    //     {
+    //         schema: 
+    //         {
+    //             prefix: 'data-transition',
+    //             namespace: 'page'
+    //         },
+    //         debug: false,
+    //         timeout: 7000,
+    //         prevent: ({ el }) => (el.classList && el.classList.contains('prevent')) || el.closest('.prevent'),
+    //         transitions:
+    //         [
+    //             {
+    //                 name: 'once',
+    //                 once: ({next}) => this.onceLoad(next),
+    //             },
+    //             {   
+    //                 name: 'transition',
+    //                 async leave(data)
+    //                 {
+    //                     const done = this.async()
+    //                     instance.leave = await import('./transitions/Leave.js').then(module => new module.default(done))
+    //                 },
+    //                 async enter(data)
+    //                 {
+    //                     instance.enter = await import('./transitions/Enter.js').then(module => new module.default(data.next.container))
+    //                 },
+    //             },
+    //             {   
+    //                 name: 'self',
+    //                 async leave(data)
+    //                 {
+    //                     const done = this.async()
+    //                     instance.leave = await import('./transitions/Leave.js').then(module => new module.default(done))
+    //                 },
+    //                 async enter(data)
+    //                 {
+    //                     instance.enter = await import('./transitions/Enter.js').then(module => new module.default(data.next.container))
+    //                 },
+    //             }
+    //         ]
+    //     })
 
-        // barba.hooks.enter( (data) =>
-        // {
-        //     let videos = data.next.container.querySelectorAll('video')
-        //     videos.forEach(function(video) { video.load() })
-        // })
+    //     // barba.hooks.enter( (data) =>
+    //     // {
+    //     //     let videos = data.next.container.querySelectorAll('video')
+    //     //     videos.forEach(function(video) { video.load() })
+    //     // })
 
-        // barba.hooks.after( async (data) =>
-        // {
-        //     await restartWebflow()
-        // })
+    //     // barba.hooks.after( async (data) =>
+    //     // {
+    //     //     await restartWebflow()
+    //     // })
     }
 
     async loadMainComponentsOnce() 
