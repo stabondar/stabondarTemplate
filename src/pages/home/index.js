@@ -6,19 +6,12 @@ export default class index
         this.app = app
         this.gl = this.app.gl
 
-        this.loaded = false
-
-        this.app.on('loaded', () =>
-        {
-            if(this.loaded) return
-            this.load()
-
-            this.loaded = true
-        })
+        this.triggerLoad = async () => this.load()
     }
 
-    async load()
+    load()
     {
+        console.log('loaded')
         // const
         // [
         //     TextHover,

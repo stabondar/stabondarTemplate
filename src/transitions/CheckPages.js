@@ -6,6 +6,9 @@ export const CheckPages = async (app, main) =>
     switch(page)
     {
         case 'home':
-            return await import('@pages/home').then(module => new module.default(main, app))
+        {
+            const mod = await import('@pages/home')
+            return app.page = new mod.default(main, app)
+        }
     }
 }

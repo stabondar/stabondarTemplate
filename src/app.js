@@ -63,8 +63,8 @@ export default class app extends EventEmitter
 
         barba.hooks.enter( (data) =>
         {
-            // let videos = data.next.container.querySelectorAll('video')
-            // videos.forEach(function(video) { video.load() })
+            const videos = data.next.container.querySelectorAll('video')
+            if(videos.length > 0) videos.forEach(video =>  video.load())
         })
 
         barba.hooks.after( async (data) =>
@@ -73,9 +73,9 @@ export default class app extends EventEmitter
         })
     }
 
-    async loadMainComponentsOnce(main)
+    async loadMainComponentsOnce(main, app)
     {
-        this.app = new app()
+        console.log(main, app)
 
         const
         [
@@ -93,17 +93,17 @@ export default class app extends EventEmitter
             import('@utils/ModuleLoader.js')
         ])
 
-        this.app.scroll = new Scroll.default()
-        this.app.sizes = new Sizes.default()
-        this.gsap = new GSAP.default()
-        this.app.tick = new Time.default()
-        this.app.moduleLoader = new ModuleLoader.default(this.app)
+        app.scroll = new Scroll.default()
+        app.sizes = new Sizes.default()
+        const gsap = new GSAP.default()
+        app.tick = new Time.default()
+        app.moduleLoader = new ModuleLoader.default(app)
 
-        await CheckPages(this.app, main)
-        await this.app.moduleLoader.loadModules(main)
+        await CheckPages(app, main)
+        await app.moduleLoader.loadModules(main)
 
-        this.app.sizes.on('resize', () => this.app.trigger('resize'))
-        this.app.tick.on('tick', () => this.app.trigger('tick'))
+        app.sizes.on('resize', () => app.trigger('resize'))
+        app.tick.on('tick', () => app.trigger('tick'))
     }
 
     async onceLoad(next)

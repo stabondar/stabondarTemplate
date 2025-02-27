@@ -17,6 +17,12 @@ export default class GlobalLoader
         //     this.loader.classList.add('hidden')
         // }})
 
-        this.toLoad(this.main)
+        this.load()
+    }
+
+    async load()
+    {
+        await this.toLoad(this.main, this.app)
+        await this.app.page.triggerLoad()
     }
 }

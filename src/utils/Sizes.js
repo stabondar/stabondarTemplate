@@ -19,8 +19,8 @@ export default class Sizes extends EventEmitter
         let initWidth = windowWidth
         const checkWidth = () =>
         {
-            let afterWidth = this.canvasContainer.offsetWidth
-            let afterHeight = this.canvasContainer.offsetHeight
+            let afterWidth = this.canvasContainer ? this.canvasContainer.offsetWidth : window.innerWidth
+            let afterHeight = this.canvasContainer ? this.canvasContainer.offsetHeight : window.innerHeight
             if (windowWidth !== afterWidth || (initWidth >= 991 && windowHeight !== afterHeight))
             {
                 this.width = this.canvasContainer ? this.canvasContainer.offsetWidth : window.innerWidth
@@ -31,7 +31,7 @@ export default class Sizes extends EventEmitter
 
                 this.trigger('resize')
             }
-            windowWidth = this.canvasContainer.offsetWidth
+            windowWidth = this.canvasContainer ? this.canvasContainer.offsetWidth : window.innerWidth
         }
 
         function debounce(func)

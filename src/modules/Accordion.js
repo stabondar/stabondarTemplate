@@ -5,12 +5,17 @@ gsap.registerPlugin(ScrollTrigger)
 
 export default class Accordion
 {
-    constructor(instance, app)
+    constructor(instance, main, app)
     {
         this.instance = instance
+        this.main = main
         this.app = app
 
+        this.destroyed = false
+
         this.init()
+        this.app.on('resize', () => this.resize())
+        this.app.on('destroy', () => this.destroy())
     }
 
     init()
@@ -35,5 +40,19 @@ export default class Accordion
             item.classList.add('active')
         }
         setTimeout(() => ScrollTrigger.refresh(), 600)
+    }
+
+    resize()
+    {
+        if(this.destroyed) return
+
+        console.log('resize')
+    }
+
+    destroy()
+    {
+        if(this.destroyed) return
+
+        this.destroyed = true
     }
 }
