@@ -24,3 +24,42 @@
 </body>
 
 </html>
+
+<!-- function loadScript(url) {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = url;
+      script.type = 'module'
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
+
+  // Create a function to load CSS files dynamically
+  function loadStyles(url) {
+    return new Promise((resolve, reject) => {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = url;
+      link.onload = resolve;
+      link.onerror = reject;
+      document.head.appendChild(link);
+    });
+  }
+    fetch('https://localhost:4321/src/main.js')
+    .then(response => {
+      if (response.ok) {
+        console.log("return local");
+        // Load the local JavaScript file
+        return loadScript(response.url);
+      }
+    })
+    .catch(error => {
+      Promise.all([
+        loadStyles(${prodLink}main-style.css),
+        loadScript(${prodLink}app.js)
+      ]).catch(error => {
+        console.error("Failed to load external resources:", error);
+      });
+    }); -->
