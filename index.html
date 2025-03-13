@@ -7,8 +7,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vite App</title>
 
-  <!--<script defer type="module" src="http://localhost:3000/src/main.js"></script>-->
-  <script defer src="https://fox-tales.vercel.app/main.js"></script>
+<style>
+    main, nav {visibility: hidden}
+</style>
+
+<script defer>
+    let prodLink = 'https://some.vercel.app/'
+    function loadScript(url) { return new Promise((resolve, reject) => { const script = document.createElement('script'); script.src = url; script.type = 'module'; script.onload = resolve; script.onerror = reject; document.head.appendChild(script); }); } function loadStyles(url) { return new Promise((resolve, reject) => { const link = document.createElement('link'); link.rel = 'stylesheet'; link.href = url; link.onload = resolve; link.onerror = reject; document.head.appendChild(link); }); } fetch('https://localhost:4321/src/main.js').then(response => { if (response.ok) { console.log("return local"); return loadScript(response.url); } }).catch(error => { Promise.all([loadStyles(`${prodLink}main-style.css`), loadScript(`${prodLink}app.js`)]).catch(error => { console.error("Failed to load external resources:", error); }); });
+</script>
 </head>
 
 <body>
