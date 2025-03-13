@@ -75,8 +75,6 @@ export default class app extends EventEmitter
 
     async loadMainComponentsOnce(main, app)
     {
-        console.log(main, app)
-
         const
         [
             Scroll,
@@ -95,7 +93,7 @@ export default class app extends EventEmitter
 
         app.scroll = new Scroll.default()
         app.sizes = new Sizes.default()
-        const gsap = new GSAP.default()
+        new GSAP.default()
         app.tick = new Time.default()
         app.moduleLoader = new ModuleLoader.default(app)
 
