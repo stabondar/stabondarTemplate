@@ -54,28 +54,38 @@ Modules are reusable components that can be attached to HTML elements. They foll
 3. **Creating Modules**: Create modules as classes in `src/modules/`
    ```javascript
    // src/modules/MyModule.js
-   export default class MyModule {
-     constructor(element, main, app) {
-       this.element = element;  // The element with data-module
-       this.main = main;        // The main container
-       this.app = app;          // The app instance
-       
-       this.init();
-       this.app.on('resize', () => this.resize());
-       this.app.on('destroy', () => this.destroy());
-     }
-     
-     init() {
-       // Initialize module
-     }
-     
-     resize() {
-       // Handle resize events
-     }
-     
-     destroy() {
-       // Clean up when module is destroyed
-     }
+   export default class MyModule 
+   {
+        constructor(element, main, app) 
+        {
+            this.element = element  // The element with data-module
+            this.main = main        // The main container
+            this.app = app          // The app instance
+
+            this.destroyed = false
+            
+            this.init()
+            this.app.on('resize', () => this.resize())
+            this.app.on('destroy', () => this.destroy())
+        }
+        
+        init() 
+        {
+            // Initialize module
+        }
+        
+        resize() 
+        {
+            // Handle resize events
+            if(this.destroyed) return
+        }
+        
+        destroy() 
+        {
+            // Clean up when module is destroyed
+            if(this.destroyed) return
+            this.destroyed = true
+        }
    }
    ```
 
@@ -93,28 +103,31 @@ Pages represent different content views with their own components and logic:
 2. **Creating Pages**: Create pages in `src/pages/[pageName]/index.js`
    ```javascript
    // src/pages/about/index.js
-   export default class index {
-     constructor(main, app) {
-       this.main = main;
-       this.app = app;
-       
-       this.triggerLoad = async () => this.load();
-     }
-     
-     load() {
-       // Initialize page-specific components
-     }
-   }
+    export default class index 
+    {
+        constructor(main, app) 
+        {
+            this.main = main
+            this.app = app
+            
+            this.triggerLoad = async () => this.load()
+        }
+        
+        load() 
+        {
+            // Initialize page-specific components
+        }
+    }
    ```
 
 3. **Add to Router**: Update `CheckPages.js` with the new page
    ```javascript
    // src/transitions/CheckPages.js
-   case 'about':
-   {
-     const mod = await import('@pages/about');
-     return app.page = new mod.default(main, app);
-   }
+    case 'about':
+    {
+        const mod = await import('@pages/about')
+        return app.page = new mod.default(main, app)
+    }
    ```
 
 ## Working with CSS/SCSS
