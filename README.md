@@ -1,68 +1,37 @@
-# Stabondar Template
+## Core App Instance
 
-A modern web development template built with Vite for creating dynamic websites with smooth page transitions and animations.
+The template uses a singleton app instance that provides access to core functionalities throughout your application. This central instance is accessible in modules, page components, and transitions.
 
-## Features
+### Available Properties and Methods
 
-- Seamless page transitions using Barba.js
-- Smooth scrolling with Lenis
-- GSAP animations with premium plugins (bonus package)
-- Dynamic module loading system
-- Responsive design support
-- ThreeJS integration for WebGL/3D elements
-- Hot module replacement in development
-- Production-ready build optimization
-
-## Technologies
-
-- **Frontend Architecture**: Custom modular JavaScript with class-based components
-- **Bundler**: Vite 6.1+
-- **Animation**: GSAP (GreenSock Animation Platform)
-- **Page Transitions**: Barba.js
-- **Smooth Scrolling**: Lenis
-- **3D/WebGL**: Three.js
-- **CSS Preprocessor**: Sass
-- **Deployment**: Vercel
-- **Code Quality**: ESLint with Prettier
-
-## Project Structure
-
-```
-/
-├── index.html          # Main HTML entry point
-├── src/
-│   ├── app.js          # Core application logic
-│   ├── main.js         # JavaScript entry point
-│   ├── css/            # SCSS stylesheets
-│   │   ├── modules/    # Component-specific styles
-│   │   └── style.scss  # Main stylesheet
-│   ├── modules/        # Reusable UI components
-│   ├── pages/          # Page-specific components
-│   ├── transitions/    # Page transition definitions
-│   └── utils/          # Utility classes and helpers
+```javascript
+// Available on this.app in modules and pages
+this.app.scroll.lenis    // Access to Lenis smooth scrolling instance
+this.app.sizes           // Viewport size tracking
+this.app.page            // Current page instance
+this.app.moduleLoader    // Module loader utility
+this.app.tick            // Animation tick/frame handler
 ```
 
-## Setup and Installation
+### Event System
 
-1. Clone the repository
-2. Install dependencies:
-   ```
-   npm install
-   ```
-3. Run the development server:
-   ```
-   npm run dev
-   ```
-   The site will be available at http://localhost:4321
+The app instance extends the EventEmitter class, providing a pub/sub pattern for communication:
 
-## Development Workflow
+```javascript
+// Listen for events (in modules/components)
+this.app.on('resize', () => this.resize());
+this.app.on('destroy', () => this.destroy());
+this.app.on('tick', () => this.animate());
 
-- **Development**: `npm run dev` - Start Vite dev server with HMR
-- **Build**: `npm run build` - Create optimized production build
-- **Preview**: `npm run preview` - Preview production build locally
-- **Lint**: `npm run lint:fix` - Fix code style issues with ESLint
-- **Clean**: `npm run clean` - Remove dist directory
-- **Deploy**: `npm run deploy` - Deploy to Vercel
+// Trigger events (usually from core systems)
+this.app.trigger('resize');
+```
+
+### Key Events
+
+- **resize**: Fired when the viewport size changes
+- **destroy**: Fired during page transitions before the new page is loaded
+- **tick**: Fired on each animation frame
 
 ## Working with Modules
 
@@ -148,8 +117,6 @@ Pages represent different content views with their own components and logic:
    }
    ```
 
-4. **Transitions**: Pages work with Barba.js transitions defined in the transitions folder
-
 ## Working with CSS/SCSS
 
 The project uses SCSS for styling with a modular architecture:
@@ -165,12 +132,70 @@ The project uses SCSS for styling with a modular architecture:
      ```scss
      // style.scss
      @import './modules/myModule.scss';
-     ```
+     ```# Stabondar Template
 
-## Key Components
+## Overview
+A modern web development template built with Vite for creating dynamic websites with smooth page transitions and animations. This template provides a structured architecture with class-based components, event-driven communication, and seamless page transitions using Barba.js.
 
-- **EventEmitter**: Custom pub/sub event system
-- **Scroll**: Smooth scrolling implementation with Lenis
-- **ModuleLoader**: Dynamic component loading and initialization
-- **GSAP Integration**: Animation utilities with timeline management
-- **Page Transitions**: Custom transition schemas with Barba.js
+## Directory Structure
+```
+/
+├── index.html          # Main HTML entry point
+├── src/
+│   ├── app.js          # Core application logic
+│   ├── main.js         # JavaScript entry point
+│   ├── css/            # SCSS stylesheets
+│   │   ├── modules/    # Component-specific styles
+│   │   └── style.scss  # Main stylesheet
+│   ├── modules/        # Reusable UI components
+│   ├── pages/          # Page-specific components
+│   ├── transitions/    # Page transition definitions
+│   └── utils/          # Utility classes and helpers
+├── vite.config.js      # Vite configuration
+├── .gitignore          # Git ignore file
+└── README.md           # This file
+```
+
+## Features
+
+- Seamless page transitions using Barba.js
+- Smooth scrolling with Lenis
+- GSAP animations with premium plugins (bonus package)
+- Dynamic module loading system
+- Responsive design support
+- Event-driven architecture with custom EventEmitter
+- Hot module replacement in development
+- Production-ready build optimization
+
+## Technologies
+
+- **Frontend Architecture**: Custom modular JavaScript with class-based components
+- **Bundler**: Vite 6.1+
+- **Animation**: GSAP (GreenSock Animation Platform)
+- **Page Transitions**: Barba.js
+- **Smooth Scrolling**: Lenis
+- **CSS Preprocessor**: Sass
+- **Deployment**: Vercel
+- **Code Quality**: ESLint with Prettier
+
+## Setup and Installation
+
+1. Clone the repository
+2. Install dependencies:
+   ```
+   npm install
+   ```
+3. Run the development server:
+   ```
+   npm run dev
+   ```
+   The site will be available at http://localhost:4321
+
+## Development Workflow
+
+- **Development**: `npm run dev` - Start Vite dev server with HMR
+- **Build**: `npm run build` - Create optimized production build
+- **Preview**: `npm run preview` - Preview production build locally
+- **Lint**: `npm run lint:fix` - Fix code style issues with ESLint
+- **Clean**: `npm run clean` - Remove dist directory
+- **Deploy**: `npm run deploy` - Deploy to Vercel
