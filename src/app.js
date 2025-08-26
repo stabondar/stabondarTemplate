@@ -5,6 +5,7 @@ import EventEmitter from '@utils/EventEmitter.js'
 import { RestartWebflow } from '@utils/RestartWebflow.js'
 import { defaultTransition } from '@transitions/schema/defaultTransition.js'
 import { CheckPages } from '@transitions/CheckPages.js'
+import FontFaceObserver from 'fontfaceobserver'
 
 let instance = null
 
