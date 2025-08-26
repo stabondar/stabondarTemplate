@@ -34,7 +34,7 @@ export default defineConfig(
                 format: 'es', // output format (ES modules)
                 chunkFileNames: '[name]-[hash].js',
                 entryFileNames: 'app.js',
-                assetFileNames: 'main-style.[ext]',
+                assetFileNames: '[name].[ext]',
                 esModule: true,
                 compact: true,
                 dynamicImportVars: true,
@@ -45,10 +45,10 @@ export default defineConfig(
     plugins:
     [
         glsl(),
-        mkcert(
-        {
+        // mkcert(
+        // {
 
-        })
+        // })
     ],
     server:
     {
@@ -61,6 +61,7 @@ export default defineConfig(
             methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
             allowedHeaders: ['Content-Type', 'Authorization']
         },
+        allowedHosts: ['stabondar.ngrok.app'],
     },
     preview:
     {

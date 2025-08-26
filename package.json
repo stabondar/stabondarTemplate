@@ -1,42 +1,39 @@
 {
-  "name": "stabondar-template",
-  "version": "3.0.2",
-  "author": "stabondar>",
-  "license": "MIT",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "clean": "rimraf -rf dist",
-    "lint:fix": "eslint ./src --ext .js,.jsx --fix",
-    "deploy": "vercel --prod"
-  },
-  "devDependencies": {
-    "eslint": "^8.23.1",
-    "eslint-config-prettier": "^10.0.1",
-    "eslint-plugin-import": "^2.25.4",
-    "eslint-plugin-prettier": "^5.2.3",
-    "eslint-plugin-sort-imports-es6-autofix": "^0.6.0",
-    "rimraf": "^6.0.1",
-    "sass": "^1.58.3",
-    "vite": "^6.1.0",
-    "vite-plugin-eslint": "^1.8.1",
-    "vite-plugin-glsl": "^1.3.1"
-  },
-  "dependencies": {
-    "@barba/core": "^2.10.3",
-    "@barba/prefetch": "^2.2.0",
-    "@finsweet/ts-utils": "^0.40.0",
-    "fontfaceobserver": "^2.3.0",
-    "gsap": "file:gsap-bonus.tgz",
-    "jquery-validation": "^1.21.0",
-    "lenis": "^1.1.14",
-    "lil-gui": "^0.20.0",
-    "stats-gl": "^3.6.0",
-    "tempus": "^1.0.0-dev.10",
-    "three": "^0.173.0",
-    "vercel": "^41.1.4",
-    "vite-plugin-mkcert": "^1.17.6"
-  }
+    "name": "stabondar-template",
+    "version": "4.0.0",
+    "author": "stabondar>",
+    "license": "MIT",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview",
+        "clean": "rimraf -rf dist",
+        "deploy": "vercel --prod",
+        "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,css,scss,json}\"",
+        "format:check": "prettier --check \"src/**/*.{js,jsx,ts,tsx,css,scss,json}\""
+    },
+    "devDependencies": {
+        "prettier": "^3.6.2",
+        "prettier-plugin-brace-style": "^0.8.1",
+        "rimraf": "^6.0.1",
+        "sass": "^1.58.3",
+        "vite": "^6.1.0",
+        "vite-plugin-glsl": "^1.3.1"
+    },
+    "dependencies": {
+        "@barba/core": "^2.10.3",
+        "@barba/prefetch": "^2.2.0",
+        "@finsweet/ts-utils": "^0.40.0",
+        "fontfaceobserver": "^2.3.0",
+        "gsap": "^3.13.0",
+        "jquery-validation": "^1.21.0",
+        "lenis": "^1.1.14",
+        "lil-gui": "^0.20.0",
+        "stats-gl": "^3.6.0",
+        "tempus": "^1.0.0-dev.10",
+        "three": "^0.173.0",
+        "vercel": "^41.1.4",
+        "vite-plugin-mkcert": "^1.17.6"
+    }
 }

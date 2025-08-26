@@ -1,4 +1,4 @@
-import { restartWebflow } from '@finsweet/ts-utils';
+import { restartWebflow } from '@finsweet/ts-utils'
 
 export const RestartWebflow = async (data) =>
 {

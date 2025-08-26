@@ -12,7 +12,7 @@ export default class app extends EventEmitter
 {
     constructor()
     {
-        if(instance) return instance
+        if (instance) return instance
 
         super()
 
@@ -21,53 +21,63 @@ export default class app extends EventEmitter
 
         history.scrollRestoration = 'manual'
 
-        this.init()
+        this.loadFonts().then(() => this.init())
+    }
+
+    async loadFonts()
+    {
+        const font = new FontFaceObserver('ABC monument grotesk mono')
+        const fontTitle = new FontFaceObserver('Pragmatica Cond')
+
+        const fontPromises = [
+            font.load(null, 8000).catch(() => console.warn('ABC monument grotesk mono font failed to load')),
+            fontTitle.load(null, 8000).catch(() => console.warn('Pragmatica Cond font failed to load')),
+        ]
+
+        return Promise.all(fontPromises)
     }
 
     init()
     {
         barba.use(barbaPrefetch)
 
-        barba.init(
-        {
-            schema:
-            {
+        barba.init({
+            schema: {
                 prefix: 'data-transition',
-                namespace: 'page'
+                namespace: 'page',
             },
             debug: true,
             timeout: 7000,
             prevent: ({ el, event }) =>
             {
-                if(event.type == 'click')
+                if (event.type == 'click')
                 {
                     event.preventDefault()
                     event.stopPropagation()
 
-                    if(el.classList.contains('go')) window.location = el.href
+                    if (el.classList.contains('go')) window.location = el.href
 
-                    if(el.classList.contains('prevent')) return true
-                    if(el.href.includes('#')) return true
+                    if (el.classList.contains('prevent')) return true
+                    if (el.href.includes('#')) return true
                 }
             },
-            transitions:
-            [
+            transitions: [
                 {
                     name: 'once',
-                    once: ({next}) => this.onceLoad(next),
+                    once: ({ next }) => this.onceLoad(next),
                 },
                 defaultTransition('transition', this, CheckPages),
-                defaultTransition('self', this, CheckPages)
-            ]
+                defaultTransition('self', this, CheckPages),
+            ],
         })
 
-        barba.hooks.enter( (data) =>
+        barba.hooks.enter((data) =>
         {
             const videos = data.next.container.querySelectorAll('video')
-            if(videos.length > 0) videos.forEach(video =>  video.load())
+            if (videos.length > 0) videos.forEach((video) => video.load())
         })
 
-        barba.hooks.after( async (data) =>
+        barba.hooks.after(async (data) =>
         {
             await RestartWebflow()
         })
@@ -75,27 +85,23 @@ export default class app extends EventEmitter
 
     async loadMainComponentsOnce(main, app)
     {
-        const
-        [
-            Scroll,
-            Sizes,
-            GSAP,
-            Time,
-            ModuleLoader
-        ] = await Promise.all(
-        [
+        app.options = {
+            onceLoaded: false,
+        }
+
+        const [Scroll, Sizes, Time, ModuleLoader, Observer] = await Promise.all([
             import('@utils/Scroll.js'),
             import('@utils/Sizes.js'),
-            import('@utils/GSAP.js'),
             import('@utils/Tick.js'),
-            import('@utils/ModuleLoader.js')
+            import('@utils/ModuleLoader.js'),
+            import('@utils/Observer.js'),
         ])
 
         app.scroll = new Scroll.default()
         app.sizes = new Sizes.default()
-        new GSAP.default()
         app.tick = new Time.default()
         app.moduleLoader = new ModuleLoader.default(app)
+        app.observer = new Observer.default()
 
         await CheckPages(app, main)
         await app.moduleLoader.loadModules(main)
@@ -106,7 +112,9 @@ export default class app extends EventEmitter
 
     async onceLoad(next)
     {
-        this.once = await import('@transitions/GlobalLoader.js').then(module => new module.default(next, this.loadMainComponentsOnce, this))
+        this.once = await import('@transitions/GlobalLoader.js').then(
+            (module) => new module.default(next, this.loadMainComponentsOnce, this)
+        )
     }
 }
 

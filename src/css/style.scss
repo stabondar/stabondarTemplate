@@ -1,9 +1,13 @@
-@import './root.scss';
+@use './root.scss' as *;
 
 // Components
-// @import './components/lenis.scss';
+// @import './components/lenis.scss' as *;
 
 // Modules
-@import './modules/accordion.scss';
+@use './modules/accordion.scss' as *;
 
-@import './editor.scss';
+@use './editor.scss' as *;
+
+a:is(.w-webflow-badge) {
+    display: none !important;
+}

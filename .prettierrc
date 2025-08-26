@@ -1,0 +1,13 @@
+{
+    "tabWidth": 4,
+    "useTabs": false,
+    "singleQuote": true,
+    "semi": false,
+    "trailingComma": "es5",
+    "bracketSpacing": true,
+    "arrowParens": "always",
+    "printWidth": 120,
+    "plugins": ["prettier-plugin-brace-style"],
+    "braceStyle": "allman",
+    "allowSingleLine": true
+}

@@ -13,16 +13,19 @@ export default class Leave
 
         this.scroll.stop()
 
-        gsap.to(this.container, {autoAlpha: 0, onComplete: () =>
-        {
-            ScrollTrigger.killAll()
-            done()
+        gsap.to(this.container, {
+            autoAlpha: 0,
+            onComplete: () =>
+            {
+                ScrollTrigger.killAll()
+                done()
 
-            this.app.trigger('destroy')
-            this.app.onceCompleted = true
+                this.app.trigger('destroy')
+                this.app.onceCompleted = true
 
-            this.app.scroll.destroy()
-            window.scrollTo(0, 0)
-        }})
+                this.app.scroll.destroy()
+                window.scrollTo(0, 0)
+            },
+        })
     }
 }

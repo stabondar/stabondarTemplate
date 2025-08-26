@@ -12,8 +12,11 @@
 </style>
 
 <script defer>
-    let prodLink = 'https://some.vercel.app/'
-    function loadScript(url) { return new Promise((resolve, reject) => { const script = document.createElement('script'); script.src = url; script.type = 'module'; script.onload = resolve; script.onerror = reject; document.head.appendChild(script); }); } function loadStyles(url) { return new Promise((resolve, reject) => { const link = document.createElement('link'); link.rel = 'stylesheet'; link.href = url; link.onload = resolve; link.onerror = reject; document.head.appendChild(link); }); } fetch('https://localhost:4321/src/main.js').then(response => { if (response.ok) { console.log("return local"); return loadScript(response.url); } }).catch(error => { Promise.all([loadStyles(`${prodLink}main-style.css`), loadScript(`${prodLink}app.js`)]).catch(error => { console.error("Failed to load external resources:", error); }); });
+    let prodLink = 'https://new-home.ciridae.pages.dev/'
+    let ngrokEnv = 'https://stabondar.ngrok.app/'
+    let localEnv = 'http://localhost:4321/'
+    let allowNgrok = false
+    let isWebflow=window.location.href.includes('webflow.io');function loadScript(e){return new Promise((r,l)=>{let t=document.createElement("script");t.src=e,t.type="module",t.onload=r,t.onerror=l,document.head.appendChild(t)})}function loadStyles(e){return new Promise((r,l)=>{let t=document.createElement("link");t.rel="stylesheet",t.href=e,t.onload=r,t.onerror=l,document.head.appendChild(t)})}function loadProdResources(){Promise.all([loadStyles(`${prodLink}index.css`),loadScript(`${prodLink}app.js`)]).catch(e=>{console.error("Failed to load production resources:",e)})}isWebflow?(allowNgrok?fetch(`${ngrokEnv}src/main.js`).then(e=>{if(e.ok)return console.log("Loading from ngrok"),loadScript(e.url)}).catch(e=>{console.log("Ngrok not available, loading production"),loadProdResources()}):fetch(`${localEnv}src/main.js`).then(e=>{if(e.ok)return console.log("Loading from localhost"),loadScript(e.url)}).catch(e=>{console.log("Localhost not available, loading production"),loadProdResources()})):loadProdResources();
 </script>
 </head>
 
@@ -24,42 +27,3 @@
 </body>
 
 </html>
-
-<!-- function loadScript(url) {
-    return new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      script.src = url;
-      script.type = 'module'
-      script.onload = resolve;
-      script.onerror = reject;
-      document.head.appendChild(script);
-    });
-  }
-
-  // Create a function to load CSS files dynamically
-  function loadStyles(url) {
-    return new Promise((resolve, reject) => {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = url;
-      link.onload = resolve;
-      link.onerror = reject;
-      document.head.appendChild(link);
-    });
-  }
-    fetch('https://localhost:4321/src/main.js')
-    .then(response => {
-      if (response.ok) {
-        console.log("return local");
-        // Load the local JavaScript file
-        return loadScript(response.url);
-      }
-    })
-    .catch(error => {
-      Promise.all([
-        loadStyles(${prodLink}main-style.css),
-        loadScript(${prodLink}app.js)
-      ]).catch(error => {
-        console.error("Failed to load external resources:", error);
-      });
-    }); -->

@@ -13,21 +13,23 @@ export default class ModuleLoader
 
             const elements = main.querySelectorAll('[data-module]')
 
-            if(elements.length < 1) return
+            if (elements.length < 1) return
 
             elements.forEach(async (element) =>
             {
                 const moduleName = element.getAttribute('data-module')
                 const values = moduleName.split(' ')
-                for(const value of values)
+                for (const value of values)
                 {
-                    const module = await import(`@modules/${value}.js`)
-                        .then(module => new module.default(element, main, this.app))
+                    const module = await import(`@modules/${value}.js`).then(
+                        (module) => new module.default(element, this.app, main)
+                    )
                 }
             })
-        } catch (error)
+        }
+        catch (error)
         {
-            console.warn(`Error loading modules: ${error.message}`);
+            console.warn(`Error loading modules: ${error.message}`)
         }
     }
 }
