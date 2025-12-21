@@ -9,23 +9,32 @@ export default class ModuleLoader
     {
         try
         {
-            // const test = await import('./utils/Test.js').then(module => new module.default(this.app))
+            // const updateNavPromise = import('./UpdateNav.js').then((module) => new module.default(main, this.app))
+            // const atTopPromise = import('./AtTop.js').then((module) => new module.default(main, this.app))
 
             const elements = main.querySelectorAll('[data-module]')
 
             if (elements.length < 1) return
 
-            elements.forEach(async (element) =>
+            const modulePromises = []
+
+            elements.forEach((element) =>
             {
                 const moduleName = element.getAttribute('data-module')
                 const values = moduleName.split(' ')
+
                 for (const value of values)
                 {
-                    const module = await import(`@modules/${value}.js`).then(
+                    if (!value || value.trim() === '') continue
+
+                    const modulePromise = import(`@modules/${value}.js`).then(
                         (module) => new module.default(element, this.app, main)
                     )
+                    modulePromises.push(modulePromise)
                 }
             })
+
+            await Promise.all([...modulePromises, updateNavPromise, atTopPromise])
         }
         catch (error)
         {
