@@ -104,7 +104,7 @@ export default class app extends EventEmitter
         app.moduleLoader = new ModuleLoader.default(app)
         app.observer = new Observer.default()
 
-        await CheckPages(app, main)
+        await CheckPages(main, app)
         await app.moduleLoader.loadModules(main)
 
         app.sizes.on('resize', () => app.trigger('resize'))

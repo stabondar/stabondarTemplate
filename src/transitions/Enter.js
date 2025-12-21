@@ -43,7 +43,7 @@ export default class Enter
         })
 
         this.app.moduleLoader.loadModules(this.container)
-        this.checkPages(this.app, this.container)
+        this.checkPages(this.container, this.app)
 
         ScrollTrigger.refresh()
     }
